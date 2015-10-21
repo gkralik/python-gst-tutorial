@@ -8,6 +8,7 @@ gi.require_version('GdkX11', '3.0')
 gi.require_version('GstVideo', '1.0')
 from gi.repository import Gst, Gtk, GLib, GdkX11, GstVideo
 
+# http://docs.gstreamer.com/display/GstSDK/Basic+tutorial+5%3A+GUI+toolkit+integration
 class Player(object):
     def __init__(self):
         # initialize GTK
@@ -250,8 +251,7 @@ class Player(object):
         nr_audio = self.playbin.get_property("n-audio")
         nr_text = self.playbin.get_property("n-text")
 
-        i = 0
-        while i < nr_video:
+        for i in range(nr_video):
             tags = None
             # retrieve the stream's video tags
             tags = self.playbin.emit("get-video-tags", i)
@@ -259,10 +259,8 @@ class Player(object):
                 buffer.insert_at_cursor("video stream {0}\n".format(i))
                 _, str = tags.get_string(Gst.TAG_VIDEO_CODEC)
                 buffer.insert_at_cursor("  codec: {0}\n".format(str or "unknown"))
-            i += 1
 
-        i = 0
-        while i < nr_audio:
+        for i in range(nr_audio):
             tags = None
             # retrieve the stream's audio tags
             tags = self.playbin.emit("get-audio-tags", i)
@@ -280,10 +278,7 @@ class Player(object):
                 if ret:
                     buffer.insert_at_cursor("  bitrate: {0}\n".format(str or "unknown"))
 
-            i += 1
-
-        i = 0
-        while i < nr_text:
+        for i in range(nr_text):
             tags = None
             # retrieve the stream's subtitle tags
             tags = self.playbin.emit("get-text-tags", i)
@@ -292,8 +287,6 @@ class Player(object):
                 ret, str = tags.get_string(Gst.TAG_LANGUAGE_CODE)
                 if ret:
                     buffer.insert_at_cursor("  language: {0}\n".format(str or "unknown"))
-
-            i += 1
 
     # this function is called when an "application" message is posted on the bus
     # here we retrieve the message posted by the on_tags_changed callback

@@ -7,6 +7,7 @@ from gi.repository import Gst
 
 from helper import format_ns
 
+# http://docs.gstreamer.com/display/GstSDK/Basic+tutorial+4%3A+Time+management
 class Player(object):
     def __init__(self):
         # are we playing?

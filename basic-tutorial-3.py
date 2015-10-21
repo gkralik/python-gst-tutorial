@@ -5,6 +5,7 @@ import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 
+# http://docs.gstreamer.com/display/GstSDK/Basic+tutorial+3%3A+Dynamic+pipelines
 class Player(object):
     def __init__(self):
         # initialize GStreamer

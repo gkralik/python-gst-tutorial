@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# http://docs.gstreamer.com/display/GstSDK/Basic+tutorial+2%3A+GStreamer+concepts
+
 import sys
 import gi
 gi.require_version('Gst', '1.0')

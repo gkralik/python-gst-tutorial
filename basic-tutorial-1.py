@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# http://docs.gstreamer.com/pages/viewpage.action?pageId=327735
+
 import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst, GObject, GLib

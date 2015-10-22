@@ -8,10 +8,14 @@ from gi.repository import Gst, GLib
 # http://docs.gstreamer.com/display/GstSDK/Basic+tutorial+6%3A+Media+formats+and+Pad+Capabilities
 
 # the functions below print the capabilities in a human-friendly format
+
+
 def print_field(field, value, pfx):
     str = Gst.value_serialize(value)
-    print("{0:s}  {1:15s}: {2:s}".format(pfx, GLib.quark_to_string(field), str))
+    print("{0:s}  {1:15s}: {2:s}".format(
+        pfx, GLib.quark_to_string(field), str))
     return True
+
 
 def print_caps(caps, pfx):
     if not caps:
@@ -31,6 +35,8 @@ def print_caps(caps, pfx):
         structure.foreach(print_field, pfx)
 
 # prints information about a pad template (including its capabilities)
+
+
 def print_pad_templates_information(factory):
     print("Pad templates for {0:s}".format(factory.get_name()))
     if factory.get_num_pad_templates() == 0:
@@ -64,6 +70,8 @@ def print_pad_templates_information(factory):
         print("")
 
 # shows the current capabilities of the requested pad in the given element
+
+
 def print_pad_capabilities(element, pad_name):
     # retrieve pad
     pad = element.get_static_pad(pad_name)
@@ -80,6 +88,7 @@ def print_pad_capabilities(element, pad_name):
     # print
     print("Caps for the {0:s} pad:".format(pad_name))
     print_caps(caps, "      ")
+
 
 def main():
     # initialize GStreamer
@@ -126,7 +135,8 @@ def main():
     bus = pipeline.get_bus()
     while True:
         try:
-            msg = bus.timed_pop_filtered(0.5 * Gst.SECOND,
+            msg = bus.timed_pop_filtered(
+                0.5 * Gst.SECOND,
                 Gst.MessageType.ERROR | Gst.MessageType.EOS | Gst.MessageType.STATE_CHANGED)
 
             if msg:
@@ -145,8 +155,12 @@ def main():
                     # pieline
                     if msg.src == pipeline:
                         old, new, pending = msg.parse_state_changed()
-                        print("Pipeline state changed from", Gst.Element.state_get_name(old),
-                            "to", Gst.Element.state_get_name(new), ":")
+                        print(
+                            "Pipeline state changed from",
+                            Gst.Element.state_get_name(old),
+                            "to",
+                            Gst.Element.state_get_name(new),
+                            ":")
 
                         # print the current capabilities of the sink
                         print_pad_capabilities(sink, "sink")

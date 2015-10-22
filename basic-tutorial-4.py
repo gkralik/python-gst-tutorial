@@ -8,7 +8,10 @@ from gi.repository import Gst
 from helper import format_ns
 
 # http://docs.gstreamer.com/display/GstSDK/Basic+tutorial+4%3A+Time+management
+
+
 class Player(object):
+
     def __init__(self):
         # are we playing?
         self.playing = False
@@ -27,11 +30,12 @@ class Player(object):
         # create the elements
         self.playbin = Gst.ElementFactory.make("playbin", "playbin")
         if not self.playbin:
-            print("ERROR: Could not create 'playbin' element");
+            print("ERROR: Could not create 'playbin' element")
             sys.exit(1)
 
         # set the uri to play
-        self.playbin.set_property("uri", "http://docs.gstreamer.com/media/sintel_trailer-480p.webm")
+        self.playbin.set_property(
+            "uri", "http://docs.gstreamer.com/media/sintel_trailer-480p.webm")
 
     def play(self):
         # dont start again if we are already playing
@@ -62,26 +66,28 @@ class Player(object):
                     if self.playing:
                         current = -1
                         # query the current position of the stream
-                        ret, current = self.playbin.query_position(Gst.Format.TIME)
+                        ret, current = self.playbin.query_position(
+                            Gst.Format.TIME)
                         if not ret:
                             print("ERROR: Could not query current position")
 
                         # if we don't know it yet, query the stream duration
                         if self.duration == Gst.CLOCK_TIME_NONE:
-                            (ret, self.duration) = self.playbin.query_duration(Gst.Format.TIME)
+                            (ret, self.duration) = self.playbin.query_duration(
+                                Gst.Format.TIME)
                             if not ret:
                                 print("ERROR: Could not query stream duration")
 
                         # print current position and total duration
-                        print("Position {0} / {1}".format(format_ns(current), format_ns(self.duration)))
+                        print(
+                            "Position {0} / {1}".format(format_ns(current), format_ns(self.duration)))
 
                         # if seeking is enabled, we have not done it yet and the time is right,
                         # seek
                         if self.seek_enabled and not self.seek_done and current > 10 * Gst.SECOND:
                             print("Reached 10s, performing seek...")
-                            self.playbin.seek_simple(Gst.Format.TIME,
-                                Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT,
-                                30 * Gst.SECOND)
+                            self.playbin.seek_simple(
+                                Gst.Format.TIME, Gst.SeekFlags.FLUSH | Gst.SeekFlags.KEY_UNIT, 30 * Gst.SECOND)
 
                             self.seek_done = True
                 if self.terminate:
@@ -120,7 +126,9 @@ class Player(object):
                         fmt, self.seek_enabled, start, end = query.parse_seeking()
 
                         if self.seek_enabled:
-                            print("Seeking is ENABLED (from {0} to {1})".format(format_ns(start), format_ns(end)))
+                            print(
+                                "Seeking is ENABLED (from {0} to {1})".format(
+                                    format_ns(start), format_ns(end)))
                         else:
                             print("Seeking is DISABLED for this stream")
                     else:

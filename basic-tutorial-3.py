@@ -6,7 +6,10 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 
 # http://docs.gstreamer.com/display/GstSDK/Basic+tutorial+3%3A+Dynamic+pipelines
+
+
 class Player(object):
+
     def __init__(self):
         # initialize GStreamer
         Gst.init(None)
@@ -31,7 +34,8 @@ class Player(object):
             sys.exit(1)
 
         # set the URI to play
-        self.source.set_property("uri", "http://docs.gstreamer.com/media/sintel_trailer-480p.webm")
+        self.source.set_property(
+            "uri", "http://docs.gstreamer.com/media/sintel_trailer-480p.webm")
 
         # connect to the pad-added signal
         self.source.connect("pad-added", self.on_pad_added)
@@ -48,8 +52,7 @@ class Player(object):
         while True:
             msg = bus.timed_pop_filtered(
                 Gst.CLOCK_TIME_NONE,
-                Gst.MessageType.STATE_CHANGED | Gst.MessageType.EOS | Gst.MessageType.ERROR
-            )
+                Gst.MessageType.STATE_CHANGED | Gst.MessageType.EOS | Gst.MessageType.ERROR)
 
             if not msg:
                 continue
@@ -85,8 +88,10 @@ class Player(object):
     # handler for the pad-added signal
     def on_pad_added(self, src, new_pad):
         sink_pad = self.convert.get_static_pad("sink")
-        print("Received new pad '{0:s}' from '{1:s}'".format(new_pad.get_name(),
-            src.get_name()))
+        print(
+            "Received new pad '{0:s}' from '{1:s}'".format(
+                new_pad.get_name(),
+                src.get_name()))
 
         # if our converter is already linked, we have nothing to do here
         if(sink_pad.is_linked()):

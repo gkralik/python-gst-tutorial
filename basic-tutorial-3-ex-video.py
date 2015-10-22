@@ -6,30 +6,35 @@ gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 
 # http://docs.gstreamer.com/display/GstSDK/Basic+tutorial+3%3A+Dynamic+pipelines
+
+
 class Player(object):
+
     def __init__(self):
         # initialize GStreamer
         Gst.init(None)
 
         # create the elements
         self.source = Gst.ElementFactory.make("uridecodebin", "source")
-        self.audio_convert = Gst.ElementFactory.make("audioconvert", "audioconvert")
+        self.audio_convert = Gst.ElementFactory.make(
+            "audioconvert", "audioconvert")
         self.audio_sink = Gst.ElementFactory.make("autoaudiosink", "audiosink")
-        self.video_convert = Gst.ElementFactory.make("videoconvert", "videoconvert")
+        self.video_convert = Gst.ElementFactory.make(
+            "videoconvert", "videoconvert")
         self.video_sink = Gst.ElementFactory.make("autovideosink", "videosink")
 
         # create empty pipeline
         self.pipeline = Gst.Pipeline.new("test-pipeline")
 
         if (not self.pipeline or not self.source or not self.audio_convert
-            or not self.audio_sink or not self.video_convert or not self.video_sink):
+                or not self.audio_sink or not self.video_convert or not self.video_sink):
             print("ERROR: Could not create all elements")
             sys.exit(1)
 
         # build the pipeline. we are NOT linking the source at this point.
         # will do it later
         self.pipeline.add(self.source, self.audio_convert, self.audio_sink,
-            self.video_convert, self.video_sink)
+                          self.video_convert, self.video_sink)
         if not self.audio_convert.link(self.audio_sink):
             print("ERROR: Could not link 'audioconvert' to 'audiosink'")
             sys.exit(1)
@@ -39,7 +44,8 @@ class Player(object):
             sys.exit(1)
 
         # set the URI to play
-        self.source.set_property("uri", "http://docs.gstreamer.com/media/sintel_trailer-480p.webm")
+        self.source.set_property(
+            "uri", "http://docs.gstreamer.com/media/sintel_trailer-480p.webm")
 
         # connect to the pad-added signal
         self.source.connect("pad-added", self.on_pad_added)
@@ -56,8 +62,7 @@ class Player(object):
         while True:
             msg = bus.timed_pop_filtered(
                 Gst.CLOCK_TIME_NONE,
-                Gst.MessageType.STATE_CHANGED | Gst.MessageType.EOS | Gst.MessageType.ERROR
-            )
+                Gst.MessageType.STATE_CHANGED | Gst.MessageType.EOS | Gst.MessageType.ERROR)
 
             if not msg:
                 continue
@@ -92,8 +97,10 @@ class Player(object):
 
     # handler for the pad-added signal
     def on_pad_added(self, src, new_pad):
-        print("Received new pad '{0:s}' from '{1:s}'".format(new_pad.get_name(),
-            src.get_name()))
+        print(
+            "Received new pad '{0:s}' from '{1:s}'".format(
+                new_pad.get_name(),
+                src.get_name()))
 
         # check the new pad's type
         new_pad_caps = new_pad.get_current_caps()
@@ -105,7 +112,8 @@ class Player(object):
         elif new_pad_type.startswith("video/x-raw"):
             sink_pad = self.video_convert.get_static_pad("sink")
         else:
-            print("It has type '{0:s}' which is not raw audio/video. Ignoring.".format(new_pad_type))
+            print(
+                "It has type '{0:s}' which is not raw audio/video. Ignoring.".format(new_pad_type))
             return
 
         # if our converter is already linked, we have nothing to do here

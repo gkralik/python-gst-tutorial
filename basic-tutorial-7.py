@@ -5,6 +5,8 @@ import gi
 gi.require_version('Gst', '1.0')
 from gi.repository import Gst
 
+# http://docs.gstreamer.com/display/GstSDK/Basic+tutorial+7%3A+Multithreading+and+Pad+Availability
+
 
 def main():
     # initialize GStreamer
